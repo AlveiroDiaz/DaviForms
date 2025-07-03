@@ -1,17 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Necesario para *ngFor, *ngIf
 import { Router } from '@angular/router'; // Para la navegación
+import { SurveyService } from '../../../core/services/survey.service';
+import { SurveyResponse } from '../../../core/interfaces/survey.interface';
 
-// Interfaz para definir la estructura de una encuesta
-interface Survey {
-  id: string;
-  title: string;
-  status: 'Activa' | 'Inactiva' | 'Borrador';
-  responses: number;
-  creationDate: Date;
-  showActionsMenu?: boolean; // Propiedad para controlar la visibilidad del menú de acciones
-  link?: string; // Para el enlace de la encuesta
-}
 
 @Component({
   selector: 'app-manage-surveys',
@@ -22,9 +14,14 @@ interface Survey {
 })
 export class ManageSurveys implements OnInit {
 
-  surveys: Survey[] = [];
+  surveys: SurveyResponse[] = [];
+  loading = false;
+  error: string | null = null;
 
-  constructor(private router: Router) { }
+
+  constructor(private router: Router,
+      private surveyService: SurveyService // Asegúrate de importar y usar tu servicio de encuestas
+  ) { }
 
   ngOnInit(): void {
     // Simula la carga de encuestas (en un proyecto real, esto vendría de un servicio)
@@ -32,41 +29,20 @@ export class ManageSurveys implements OnInit {
   }
 
   loadSurveys(): void {
-    // Datos de ejemplo
-    this.surveys = [
-      {
-        id: '1',
-        title: 'Encuesta de Satisfacción del Cliente Q2 2024',
-        status: 'Activa',
-        responses: 150,
-        creationDate: new Date('2024-05-10'),
-        link: 'https://daviforms.com/survey/q2-2024-satisfaction'
+    this.loading = true;
+    this.error = null;
+
+    this.surveyService.getSurveys().subscribe({
+      next: (data) => {
+        this.surveys = data;
+        this.loading = false;
       },
-      {
-        id: '2',
-        title: 'Feedback sobre Nuevas Características del Producto',
-        status: 'Inactiva',
-        responses: 80,
-        creationDate: new Date('2024-04-01'),
-        link: 'https://daviforms.com/survey/new-features-feedback'
-      },
-      {
-        id: '3',
-        title: 'Sugerencias para Mejorar el Servicio al Cliente',
-        status: 'Activa',
-        responses: 210,
-        creationDate: new Date('2024-06-15'),
-        link: 'https://daviforms.com/survey/customer-service-suggestions'
-      },
-      {
-        id: '4',
-        title: 'Encuesta de Preferencias de Marketing',
-        status: 'Inactiva',
-        responses: 45,
-        creationDate: new Date('2024-03-20'),
-        link: 'https://daviforms.com/survey/marketing-preferences'
-      },
-    ];
+      error: (err) => {
+        console.error('Error cargando encuestas:', err);
+        this.error = err.error?.message || 'No se pudieron cargar las encuestas';
+        this.loading = false;
+      }
+    });
   }
 
   // Métodos para el botón y las acciones de la tabla
@@ -76,27 +52,27 @@ export class ManageSurveys implements OnInit {
     this.router.navigate(['/admin/survey-editor']);
   }
 
-  toggleActionsMenu(survey: Survey): void {
+  toggleActionsMenu(survey: SurveyResponse): void {
     // Cierra todos los otros menús abiertos antes de abrir el actual
     this.surveys.forEach(s => {
-      if (s.id !== survey.id) {
+      if (s._id !== survey._id) {
         s.showActionsMenu = false;
       }
     });
     survey.showActionsMenu = !survey.showActionsMenu;
   }
 
-  editSurvey(survey: Survey): void {
-    alert(`Editar encuesta: ${survey.title} (ID: ${survey.id})`);
+  editSurvey(survey: SurveyResponse): void {
+    alert(`Editar encuesta: ${survey.title} (ID: ${survey._id})`);
     // Aquí navegarías a la página de edición de encuestas, pasando el ID
-    this.router.navigate(['/admin/survey-editor/', survey.id]);
+    this.router.navigate(['/admin/survey-editor/', survey._id]);
     this.closeAllActionMenus();
   }
 
-  copySurveyLink(survey: Survey): void {
-    if (survey.link) {
-      navigator.clipboard.writeText(survey.link).then(() => {
-        alert(`Enlace copiado: ${survey.link}`);
+  copySurveyLink(survey: SurveyResponse): void {
+    if (survey._id) {
+      navigator.clipboard.writeText(`http://localhost:4200/survey/${survey._id}`).then(() => {
+        alert(`Enlace copiado: http://localhost:4200/survey/${survey._id}`);
       }).catch(err => {
         console.error('No se pudo copiar el enlace:', err);
       });
@@ -106,11 +82,21 @@ export class ManageSurveys implements OnInit {
     this.closeAllActionMenus();
   }
 
-  deleteSurvey(survey: Survey): void {
+  deleteSurvey(survey: SurveyResponse): void {
+
     if (confirm(`¿Estás seguro de que quieres eliminar la encuesta "${survey.title}"?`)) {
-      // Simula la eliminación (en un proyecto real, llamarías a un servicio)
-      this.surveys = this.surveys.filter(s => s.id !== survey.id);
-      alert(`Encuesta "${survey.title}" eliminada.`);
+      
+      this.surveyService.deleteSurvey(survey._id).subscribe({
+        next: () => {
+          alert(`Encuesta "${survey.title}" eliminada.`);
+          this.surveys = this.surveys.filter(s => s._id !== survey._id);
+        },
+        error: (err) => {
+          console.error('Error al eliminar la encuesta:', err);
+          alert('No se pudo eliminar la encuesta. Inténtalo más tarde.');
+        }
+      });
+
     }
     this.closeAllActionMenus();
   }

@@ -15,41 +15,39 @@ export const routes: Routes = [
         pathMatch: 'full', // Importante: asegura que la ruta completa coincida con la cadena vacía
     },
     {
-        path: 'admin', // Ruta principal para el panel de administración
-        component: Menu, // Carga el layout del admin
-        // Aquí podrías añadir un canActivate para proteger esta ruta y asegurar que solo usuarios logueados accedan
-        // canActivate: [AuthGuard], // <-- Necesitarías crear este guard
-        children: [ // Rutas hijas que se cargarán dentro del <router-outlet> de AdminDashboardComponent
+        path: 'admin',
+        component: Menu,
+        children: [
             {
-                path: 'manage-surveys', //  /admin/manage-surveys
-                loadComponent: () => import('./features/survey-management/manage-surveys/manage-surveys').then(m => m.ManageSurveys),
-                // ^^^ Deberás crear este componente
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'manage-surveys', // 🔁 Redirección al ingresar a /admin
             },
             {
-                path: 'survey-editor/:id', // /admin/create-survey
-                loadComponent: () => import('./features/survey-management/survey-editor/survey-editor').then(m => m.SurveyEditor),
-                //loadComponent: () => import('./features/survey-management/survey-editor/survey-editor.component').then(m => m.SurveyEditorComponent),
-                // ^^^ Este sería tu componente para crear/editar encuestas
-            }
-            // {
-            //     path: 'analyze-results', // /admin/analyze-results
-            //     //loadComponent: () => import('./features/results-dashboard/results-dashboard/results-dashboard.component').then(m => m.ResultsDashboardComponent),
-            //     // ^^^ Este sería el componente para ver gráficas y resultados
-            // },
-            // {
-            //     path: 'manage-users', // /admin/manage-users (opcional)
-            //     // loadComponent: () => import('./features/user-management/user-management.component').then(m => m.UserManagementComponent),
-            //     // ^^^ Deberás crear este componente si lo incluyes
-            // },
-            // {
-            //     path: '', // Ruta por defecto para /admin (ej. redirigir a gestionar encuestas)
-            //     redirectTo: 'manage-surveys',
-            //     pathMatch: 'full'
-            // }
-        ]
+                path: 'manage-surveys',
+                loadComponent: () =>
+                    import('./features/survey-management/manage-surveys/manage-surveys').then(
+                        (m) => m.ManageSurveys
+                    ),
+            },
+            {
+                path: 'survey-editor',
+                loadComponent: () =>
+                    import('./features/survey-management/survey-editor/survey-editor').then(
+                        (m) => m.SurveyEditor
+                    ),
+            },
+            {
+                path: 'survey-editor/:id',
+                loadComponent: () =>
+                    import('./features/survey-management/survey-editor/survey-editor').then(
+                        (m) => m.SurveyEditor
+                    ),
+            },
+        ],
     },
-     {
-    path: 'survey/:id', // La ruta que el usuario final abrirá, ej: /survey/survey123
-    component: SurveyViewer
-  },
+    {
+        path: 'survey/:id', // La ruta que el usuario final abrirá, ej: /survey/survey123
+        component: SurveyViewer
+    },
 ];

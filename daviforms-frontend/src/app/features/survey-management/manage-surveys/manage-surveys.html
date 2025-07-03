@@ -12,7 +12,7 @@
         <tr>
           <th>Título de la Encuesta</th>
           <th>Estado</th>
-          <th>Respuestas</th>
+          <th># Preguntas</th>
           <th>Fecha de Creación</th>
           <th>Acciones</th>
         </tr>
@@ -20,17 +20,28 @@
       <tbody>
         <tr *ngFor="let survey of surveys">
           <td>{{ survey.title }}</td>
+          
+          <!-- Estado según `published` -->
           <td>
-            <span class="status-badge" [class.active]="survey.status === 'Activa'" [class.inactive]="survey.status === 'Inactiva'">
-              {{ survey.status }}
+            <span 
+              class="status-badge" 
+              [class.active]="survey.published" 
+              [class.inactive]="!survey.published">
+              {{ survey.published ? 'Activa' : 'Inactiva' }}
             </span>
           </td>
-          <td>{{ survey.responses }}</td>
-          <td>{{ survey.creationDate | date:'dd/MM/yyyy' }}</td>
+          
+          <!-- Número de preguntas en lugar de respuestas -->
+          <td>{{ survey.questions.length }}</td>
+          
+          <!-- Fecha usando el campo `createdAt` -->
+          <td>{{ survey.createdAt | date:'dd/MM/yyyy' }}</td>
+          
           <td class="actions-cell">
             <div class="action-menu">
               <button class="btn icon-btn" (click)="toggleActionsMenu(survey)">
-                <i class="fas fa-ellipsis-v"></i> </button>
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
               <div class="dropdown-menu" [class.show]="survey.showActionsMenu">
                 <a class="dropdown-item" (click)="editSurvey(survey)">
                   <i class="fas fa-edit"></i> Editar
@@ -46,7 +57,9 @@
           </td>
         </tr>
         <tr *ngIf="surveys.length === 0">
-          <td colspan="5" class="no-data">No hay encuestas para mostrar. Crea una nueva.</td>
+          <td colspan="5" class="no-data">
+            No hay encuestas para mostrar. Crea una nueva.
+          </td>
         </tr>
       </tbody>
     </table>

@@ -52,12 +52,11 @@ $light-red-bg: #FFEBEE; // <-- ¡Asegúrate de que esta variable esté definida!
   }
 }
 
-.surveys-table-wrapper {
-  overflow-x: auto;
-}
+
 
 .surveys-table {
   width: 100%;
+  height: 100%;
   border-collapse: collapse;
   margin-top: 20px;
   font-size: 15px;

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Para *ngFor, *ngIf, ngSwitch
 import { FormsModule } from '@angular/forms'; // Para [(ngModel)]
 import { ActivatedRoute, Router } from '@angular/router'; // Para obtener el ID de la URL y navegar
+import { SurveyService } from '../../../core/services/survey.service';
 
 // Reutilizamos la interfaz de pregunta del editor
 interface SurveyQuestion {
@@ -32,7 +33,8 @@ export class SurveyViewer implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router // Inyectamos Router para posible navegación post-envío
+    private router: Router,
+    private surveyService: SurveyService // Asegúrate de importar y usar tu servicio de encuestas
   ) { }
 
   ngOnInit(): void {
@@ -51,69 +53,22 @@ export class SurveyViewer implements OnInit {
     });
   }
 
-  // Simula la carga de datos de la encuesta desde un backend
-  // En una aplicación real, harías una llamada HTTP a tu servicio aquí
+
   loadSurvey(id: string): void {
     console.log(`Cargando datos para la encuesta ID: ${id}`);
-    // Simulación de datos de encuesta
-    const mockSurveyData: { [key: string]: { title: string; questions: SurveyQuestion[] } } = {
-      'survey123': {
-        title: 'Encuesta de Satisfacción del Cliente DaviForms',
-        questions: [
-          { id: 'q1', type: 'short-text', label: '¿Cuál es su nombre?', required: true, placeholder: 'Su nombre completo' },
-          { id: 'q2', type: 'single-choice', label: '¿Con qué frecuencia utiliza nuestros servicios?', required: true,
-            options: [
-              { value: 'Diariamente', id: 'q2-opt1' },
-              { value: 'Semanalmente', id: 'q2-opt2' },
-              { value: 'Mensualmente', id: 'q2-opt3' },
-              { value: 'Ocasionalmente', id: 'q2-opt4' }
-            ]
-          },
-          { id: 'q3', type: 'multiple-choice', label: '¿Qué canales de comunicación prefiere para recibir información?', required: false,
-            options: [
-              { value: 'Correo Electrónico', id: 'q3-opt1' },
-              { value: 'Mensajes de Texto (SMS)', id: 'q3-opt2' },
-              { value: 'Notificaciones Push (App)', id: 'q3-opt3' },
-              { value: 'Llamada Telefónica', id: 'q3-opt4' }
-            ]
-          },
-          { id: 'q4', type: 'rating', label: 'En una escala del 1 al 5, ¿qué tan fácil fue usar nuestra plataforma?', required: true, ratingMax: 5 },
-          { id: 'q5', type: 'long-text', label: '¿Tiene alguna sugerencia para mejorar nuestros servicios?', required: false, placeholder: 'Escriba sus comentarios aquí...' },
-          { id: 'q6', type: 'date', label: '¿Cuál es la fecha de su nacimiento?', required: false }
-        ]
+    this.surveyService.getSurveysById(id).subscribe({
+      next: (data) => {
+        this.surveyTitle = data.title;
+        this.surveyQuestions = data.questions;
       },
-      'survey456': {
-        title: 'Encuesta de Preferencias de Productos',
-        questions: [
-          { id: 'p1', type: 'short-text', label: '¿Qué producto Davivienda es su favorito?', required: true },
-          { id: 'p2', type: 'single-choice', label: '¿Estaría interesado en un nuevo producto de inversión?', required: true,
-            options: [
-              { value: 'Sí, definitivamente', id: 'p2-optA' },
-              { value: 'Tal vez, necesito más información', id: 'p2-optB' },
-              { value: 'No, gracias', id: 'p2-optC' }
-            ]
-          }
-        ]
+      error: (err) => {
+        console.error('Error cargando la encuesta:', err);
+        this.surveyTitle = 'Encuesta no encontrada.';
+        this.surveyQuestions = [];
       }
-    };
-
-    const data = mockSurveyData[id];
-    if (data) {
-      this.surveyTitle = data.title;
-      this.surveyQuestions = data.questions;
-      // Inicializar userAnswers para cada pregunta
-      this.surveyQuestions.forEach(q => {
-        if (q.type === 'multiple-choice') {
-          this.userAnswers[q.id] = []; // Para checkboxes, la respuesta es un array
-        } else {
-          this.userAnswers[q.id] = null; // Valor inicial nulo para otros tipos
-        }
-      });
-    } else {
-      this.surveyTitle = 'Encuesta no encontrada.';
-      this.surveyQuestions = [];
-    }
+    });
   }
+
 
   // Maneja el cambio para checkboxes de opción múltiple
   onCheckboxChange(questionId: string, optionValue: string, event: Event): void {

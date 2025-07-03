@@ -11,7 +11,7 @@
           </a>
         </li>
         <li>
-          <a routerLink="/admin/survey-editor" routerLinkActive="active">
+          <a routerLink="/admin/survey-editor/" routerLinkActive="active">
             <i class="fas fa-plus-circle"></i> Crear Encuesta
           </a>
         </li>
@@ -27,8 +27,8 @@
         </li>
       </ul>
     </nav>
-    <div class="sidebar-footer">
-      <a href="#">Cerrar Sesión</a>
+    <div class="sidebar-footer" >
+      <a (click)="logout()">Cerrar Sesión</a>
     </div>
   </aside>
 
