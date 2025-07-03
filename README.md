@@ -36,7 +36,7 @@
 
 ```bash
 # Clonar repositorio
-git clone https://github.com/tu-usuario/daviforms.git
+git clone https://github.com/AlveiroDiaz/DaviForms.git
 
 # Instalar dependencias
 npm install
@@ -54,19 +54,7 @@ ng build --configuration production
 - npm v10+ o yarn
 - Angular CLI 20.0.5
 
-## 🌐 Estructura del Proyecto
 
-```
-src/
-├── app/
-│   ├── modules/
-│   │   ├── survey-creator/    # Módulo de creación
-│   │   ├── survey-filler/     # Módulo para responder
-│   │   ├── survey-manager/    # Gestión de encuestas
-│   │   └── auth/              # Autenticación
-├── assets/                    # Recursos estáticos
-└── environments/              # Configs por ambiente
-```
 
 ## 🔧 Dependencias Opcionales
 
