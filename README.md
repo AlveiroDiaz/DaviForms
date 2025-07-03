@@ -79,8 +79,7 @@ ng build --configuration production
 ## 📬 Contacto
 
 ¿Preguntas o sugerencias?  
-✉️ contacto@daviforms.com  
-🌐 [daviforms.com](https://www.daviforms.com)
+✉️ alveiro.diaz1@gmail.com  
 
 ---
 
