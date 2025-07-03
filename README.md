@@ -1,86 +1,81 @@
-# 📝 DaviForms - Plataforma de Encuestas
+# 📝 DaviForms - Plataforma de Encuestas Empresariales
 
-## 🚀 Tecnologías Principales
+## 🚀 Stack Tecnológico
 
-- **Node.js**: v24.3.0
-- **Angular**: 20.0.5
+### Frontend (Angular)
+- **Versión**: 20.0.5
 - **Dependencias principales**:
-  - Angular Material (opcional)
-  - RxJS
-  - NgRx (opcional para state management)
+  - Angular Material 20.0.5 (UI components)
+  - Chart.js 4.5.0 + ng2-charts 8.0.0 (visualización de datos)
+  - RxJS 7.8.0 (gestión reactiva)
+  - Font Awesome 6.7.2 (iconos)
 
-## 🔍 Módulos Principales
+### Backend (NestJS)
+- **Node.js**: v24.3.0
+- **Dependencias principales**:
+  - NestJS 11.0.1 (framework backend)
+  - Mongoose 8.16.1 (MongoDB ODM)
+  - Passport + JWT (autenticación)
+  - Swagger (documentación API)
 
-### 📊 Gestión de Encuestas
-- **Crear encuestas**: 
-  - Constructor con arrastrar y soltar
-  - Tipos de preguntas: múltiple opción, texto, escalas, etc.
-  - Personalización de diseño
-  
-- **Editar encuestas**:
-  - Modificar estructura existente
-  - Reordenar preguntas
-  - Previsualización en tiempo real
+## 🌟 Módulos Principales
 
-- **Borrar encuestas**:
-  - Eliminación con confirmación
-  - Histórico de encuestas eliminadas (opcional)
+### 📊 Constructor de Encuestas
+- **Creación**:
+  - Interfaz drag-and-drop
+  - 10+ tipos de preguntas (selección múltiple, rating, texto abierto)
+  - Lógica condicional entre preguntas
 
-### ✍️ Llenado de Encuestas
-- Interfaz responsive para respondientes
-- Validación en tiempo real
-- Guardado automático de progreso
-- Soporte para adjuntos de archivos
+### 🔧 Gestión
+- **Edición en tiempo real** con preview
+- **Versionado** de encuestas
+- **Eliminación segura** con confirmación
+
+### ✍️ Experiencia de Usuario
+- **Validación en tiempo real**
+- **Guardado automático** de progreso
 
 ## 🛠️ Configuración del Entorno
 
 ```bash
-# Clonar repositorio
+# 1. Clonar repositorio
 git clone https://github.com/AlveiroDiaz/DaviForms.git
+cd DaviForms
 
-# Instalar dependencias
+# 2. Configurar frontend
+cd daviforms-frontend
 npm install
+ng serve --open  # http://localhost:4200
 
-# Servidor de desarrollo frontend 
-ng serve --open
-
-# Servidor de desarrollo backend
-
-npm run start:dev
-
-# Build para producción
-ng build --configuration production
+# 3. Configurar backend
+cd ../daviforms-backend
+npm install
+npm run start:dev  # http://localhost:3000
 ```
 
 ## 📋 Requisitos del Sistema
 
-- Node.js v24.3.0
-- npm v10+ o yarn
-- Angular CLI 20.0.5
+| Componente | Versión |
+|------------|---------|
+| Node.js | ≥24.3.0 |
+| npm | ≥10.0.0 |
+| Angular CLI | 20.0.5 |
+| MongoDB | ≥6.0 |
 
 
 
-## 🔧 Dependencias Opcionales
+## 📬 Contacto y Soporte
 
-```json
-"dependencies": {
-  "survey-angular": "latest",  // Para constructor de encuestas
-  "ngx-ui-loader": "^10.0.0"   // Loaders visuales
-}
-```
+**Desarrollador Principal**:  
+Alveiro Díaz  
+📧 alveiro.diaz1@gmail.com  
 
-## 💡 Características Futuras
+**Reporte de Issues**:  
+[GitHub Issues](https://github.com/AlveiroDiaz/DaviForms/issues)
 
-- Exportación a PDF/Excel
-- Análisis estadístico integrado
-- Colaboración en tiempo real
-- Plantillas predefinidas
-
-## 📬 Contacto
-
-¿Preguntas o sugerencias?  
-✉️ alveiro.diaz1@gmail.com  
+**Documentación API**:  
+`http://localhost:3000/api` (disponible al iniciar backend)
 
 ---
 
-📌 **Nota**: Actualiza las versiones según tus necesidades exactas. Este README incluye placeholders para características comunes en sistemas de encuestas.
+> ℹ️ **Nota**: Para variables de entorno, crear archivo `.env` en backend basado en `.env.example`
