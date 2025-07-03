@@ -30,6 +30,7 @@ export interface SurveyResponse {
   updatedAt: string;
   userId: string;
   status: 'draft' | 'published' | 'archived'; // Estado de la encuesta
-  showActionsMenu: boolean; // Para controlar la visibilidad del menú de acciones
+  showActionsMenu: boolean;
+  responseCount?: number;
   
 }

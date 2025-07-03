@@ -11,8 +11,8 @@
       <thead>
         <tr>
           <th>Título de la Encuesta</th>
-          <th>Estado</th>
           <th># Preguntas</th>
+          <th># Respuestas</th>
           <th>Fecha de Creación</th>
           <th>Acciones</th>
         </tr>
@@ -22,17 +22,19 @@
           <td>{{ survey.title }}</td>
           
           <!-- Estado según `published` -->
-          <td>
+          <!-- <td>
             <span 
               class="status-badge" 
               [class.active]="survey.published" 
               [class.inactive]="!survey.published">
               {{ survey.published ? 'Activa' : 'Inactiva' }}
             </span>
-          </td>
+          </td> -->
           
           <!-- Número de preguntas en lugar de respuestas -->
           <td>{{ survey.questions.length }}</td>
+
+          <td>{{ survey.responseCount }}</td>
           
           <!-- Fecha usando el campo `createdAt` -->
           <td>{{ survey.createdAt | date:'dd/MM/yyyy' }}</td>
@@ -43,6 +45,9 @@
                 <i class="fas fa-ellipsis-v"></i>
               </button>
               <div class="dropdown-menu" [class.show]="survey.showActionsMenu">
+                <a class="dropdown-item" (click)="analizeSurvey(survey)">
+                  <i class="fas fa-chart-pie"></i> Analizar
+                </a>
                 <a class="dropdown-item" (click)="editSurvey(survey)">
                   <i class="fas fa-edit"></i> Editar
                 </a>

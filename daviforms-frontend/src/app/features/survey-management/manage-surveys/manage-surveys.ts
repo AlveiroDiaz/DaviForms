@@ -69,6 +69,12 @@ export class ManageSurveys implements OnInit {
     this.closeAllActionMenus();
   }
 
+  analizeSurvey(survey: SurveyResponse): void {
+
+    this.router.navigate(['/admin/analyze-results/', survey._id]);
+    this.closeAllActionMenus();
+  }
+
   copySurveyLink(survey: SurveyResponse): void {
     if (survey._id) {
       navigator.clipboard.writeText(`http://localhost:4200/survey/${survey._id}`).then(() => {

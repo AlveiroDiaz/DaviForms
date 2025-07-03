@@ -1,0 +1,64 @@
+<div class="analyze-results-container">
+  <div class="results-header">
+    <h2 *ngIf="surveyId">Análisis de Resultados de la Encuesta <span class="survey-id-display">ID: {{ surveyId }}</span></h2>
+    <h2 *ngIf="!surveyId">Análisis de Resultados</h2>
+  </div>
+
+  <!-- Indicadores de estado (carga, error, no resultados) -->
+  <div *ngIf="loading" class="loading-indicator">
+    <i class="fas fa-spinner fa-spin"></i> Cargando resultados...
+  </div>
+  <div *ngIf="error" class="error-message">
+    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+  </div>
+  <div *ngIf="!loading && !error && results.length === 0" class="no-results-message">
+    <i class="fas fa-info-circle"></i> No se encontraron resultados para esta encuesta.
+  </div>
+
+  <!-- Sección principal de resultados -->
+  <div *ngIf="!loading && !error && results.length > 0" class="results-section">
+    <div *ngFor="let result of results" class="question-result-card">
+      <h3>{{ result.questionLabel }}</h3>
+
+      <!-- Gráficos para preguntas de opción múltiple, única y valoración -->
+      <div *ngIf="result.summary && (result.type === 'single-choice' || result.type === 'multiple-choice' || result.type === 'rating')" class="chart-wrapper">
+        <!-- Gráfico de pastel para selección única -->
+        <div *ngIf="result.type === 'single-choice'" class="chart-item pie-chart">
+          <h4>Distribución de Respuestas</h4>
+          <canvas baseChart
+                  [data]="getPieChartData(result)"
+                  [options]="pieChartOptions"
+                  [type]="pieChartType"
+                  [legend]="pieChartLegend">
+          </canvas>
+        </div>
+
+        <!-- Gráfico de barras para opción múltiple o valoración -->
+        <div *ngIf="result.type === 'multiple-choice' || result.type === 'rating'" class="chart-item bar-chart">
+          <h4>Conteo de Respuestas</h4>
+          <canvas baseChart
+                  [data]="getBarChartData(result)"
+                  [options]="barChartOptions"
+                  [type]="barChartType"
+                  [legend]="barChartLegend">
+          </canvas>
+        </div>
+
+        <div *ngIf="Object.keys(result.summary).length === 0" class="no-chart-data">
+          No hay datos suficientes para generar un gráfico para esta pregunta.
+        </div>
+      </div>
+
+      <!-- Listado de respuestas para preguntas de texto o fecha -->
+      <div *ngIf="result.responses && (result.type === 'short-text' || result.type === 'long-text' || result.type === 'date')" class="text-responses-list">
+        <h4>Respuestas Individuales:</h4>
+        <ul *ngIf="result.responses.length > 0">
+          <li *ngFor="let response of result.responses">{{ response }}</li>
+        </ul>
+        <div *ngIf="result.responses.length === 0" class="no-data-message">
+          No hay respuestas de texto para esta pregunta.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

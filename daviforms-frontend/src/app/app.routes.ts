@@ -44,6 +44,21 @@ export const routes: Routes = [
                         (m) => m.SurveyEditor
                     ),
             },
+             {
+                path: 'analyze-results',
+                loadComponent: () =>
+                    import('./features/survey-management/analyze-results/analyze-results').then(
+                        (m) => m.AnalyzeResults
+                    ),
+            },
+            {
+                path: 'analyze-results/:id',
+                loadComponent: () =>
+                    import('./features/survey-management/analyze-results/analyze-results').then(
+                        (m) => m.AnalyzeResults
+                    ),
+            },
+
         ],
     },
     {

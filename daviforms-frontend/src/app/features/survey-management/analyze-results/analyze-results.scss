@@ -1,0 +1,197 @@
+@use "sass:color";
+
+// Variables de color (consistentes con el resto de tu aplicación)
+$primary-red: #E4002B;
+$dark-gray: #333;
+$medium-gray: #666;
+$light-gray: #ddd;
+$lighter-gray-bg: #f0f2f5; // Fondo claro para el cuerpo de la página o secciones
+$card-bg-color: #ffffff;
+$border-radius-base: 8px;
+$padding-base: 20px;
+$shadow-base: 0 2px 5px rgba(0,0,0,0.05);
+
+.analyze-results-container {
+  padding: $padding-base;
+  background-color: $lighter-gray-bg; // Fondo general de la sección de análisis
+  min-height: calc(100vh - 80px); // Ajusta según tu layout global
+  font-family: Arial, sans-serif;
+  color: $dark-gray;
+}
+
+.results-header {
+  background-color: $card-bg-color;
+  padding: $padding-base;
+  border-radius: $border-radius-base;
+  margin-bottom: $padding-base;
+  box-shadow: $shadow-base;
+  text-align: center;
+
+  h2 {
+    font-size: 28px;
+    color: $dark-gray;
+    margin: 0;
+    .survey-id-display {
+      color: $primary-red;
+      font-weight: bold;
+    }
+  }
+}
+
+.loading-indicator,
+.error-message,
+.no-results-message,
+.no-chart-data,
+.no-data-message {
+  text-align: center;
+  padding: $padding-base;
+  margin-bottom: $padding-base;
+  border-radius: $border-radius-base;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; // Espacio entre icono y texto
+
+  .fas {
+    font-size: 1.2em;
+  }
+}
+
+.loading-indicator {
+  background-color: #e0f7fa; // Azul claro
+  color: #007bb2;
+}
+
+.error-message {
+  background-color: #ffebee; // Rojo claro
+  color: #d32f2f;
+}
+
+.no-results-message,
+.no-chart-data,
+.no-data-message {
+  background-color: #fff3e0; // Naranja claro
+  color: #ff8f00;
+}
+
+
+.results-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // Columnas adaptables
+  gap: $padding-base; // Espacio entre las tarjetas de resultados
+}
+
+.question-result-card {
+  background-color: $card-bg-color;
+  padding: $padding-base;
+  border-radius: $border-radius-base;
+  box-shadow: $shadow-base;
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    font-size: 22px;
+    color: $primary-red;
+    margin-top: 0;
+    margin-bottom: $padding-base;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed $light-gray;
+  }
+
+  .chart-wrapper {
+    flex-grow: 1; // Permite que los gráficos ocupen el espacio disponible
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px; // Altura mínima para los gráficos
+
+    .chart-item {
+      width: 100%;
+      height: 100%; // Ocupa el 100% del contenedor del gráfico
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: $padding-base / 2;
+
+      h4 {
+        font-size: 18px;
+        color: $dark-gray;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      canvas {
+        max-width: 100%;
+        max-height: 250px; // Altura máxima para los gráficos
+      }
+    }
+  }
+
+  .text-responses-list {
+    flex-grow: 1;
+    margin-top: $padding-base / 2;
+
+    h4 {
+      font-size: 18px;
+      color: $dark-gray;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-height: 200px; // Limita la altura de la lista de respuestas
+      overflow-y: auto; // Agrega scroll si hay muchas respuestas
+      border: 1px solid $light-gray;
+      border-radius: $border-radius-base / 2;
+      background-color: $lighter-gray-bg;
+      padding: 10px;
+
+      li {
+        background-color: $card-bg-color;
+        padding: 8px 12px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        font-size: 15px;
+        color: $medium-gray;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .analyze-results-container {
+    padding: 15px;
+  }
+  .results-header h2 {
+    font-size: 24px;
+  }
+  .results-section {
+    grid-template-columns: 1fr; // Una columna en pantallas pequeñas
+  }
+  .question-result-card {
+    padding: 15px;
+  }
+  .question-result-card h3 {
+    font-size: 20px;
+  }
+  .chart-wrapper canvas {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-header h2 {
+    font-size: 20px;
+  }
+  .question-result-card h3 {
+    font-size: 18px;
+  }
+}

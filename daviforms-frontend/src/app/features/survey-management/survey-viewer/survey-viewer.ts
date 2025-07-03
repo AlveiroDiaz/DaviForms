@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'; // Para *ngFor, *ngIf, ngSwitch
 import { FormsModule } from '@angular/forms'; // Para [(ngModel)]
 import { ActivatedRoute, Router } from '@angular/router'; // Para obtener el ID de la URL y navegar
 import { SurveyService } from '../../../core/services/survey.service';
+import { SurveyResponsesService } from '../../../core/services/survey-responses.service';
 
 // Reutilizamos la interfaz de pregunta del editor
 interface SurveyQuestion {
@@ -34,7 +35,8 @@ export class SurveyViewer implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private surveyService: SurveyService // Asegúrate de importar y usar tu servicio de encuestas
+    private surveyService: SurveyService,
+    private surveyResponsesService: SurveyResponsesService
   ) { }
 
   ngOnInit(): void {
@@ -110,6 +112,23 @@ export class SurveyViewer implements OnInit {
       console.log('Encuesta Enviada:', {
         surveyId: this.surveyId,
         answers: this.userAnswers
+      });
+
+      this.surveyResponsesService.createResponse({
+        surveyId: this.surveyId || '',
+        submittedAt: new Date().toISOString(),
+        answers: Object.keys(this.userAnswers).map(questionId => ({
+          questionId,
+          answer: this.userAnswers[questionId]
+        }))
+      }).subscribe({
+        next: (response) => {
+          console.log('Respuesta enviada con éxito:', response);
+        },
+        error: (error) => {
+          console.error('Error al enviar la respuesta:', error);
+          alert('Hubo un error al enviar su respuesta. Por favor, inténtelo de nuevo más tarde.');
+        }
       });
       alert('¡Encuesta enviada con éxito! Gracias por su participación.');
       // En una aplicación real, enviarías `this.userAnswers` a tu backend.
