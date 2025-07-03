@@ -141,8 +141,6 @@ export class AnalyzeResults implements OnInit, OnDestroy {
 
     this.surveyResponsesService.getResponsesBySurvey(surveyId).subscribe({
       next: (data) => {
-        console.log('Resultados cargados:', data);
-
         this.results = data.results;
         this.loading = false;
       },

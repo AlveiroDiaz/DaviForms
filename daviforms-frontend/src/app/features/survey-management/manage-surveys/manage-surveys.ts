@@ -63,8 +63,7 @@ export class ManageSurveys implements OnInit {
   }
 
   editSurvey(survey: SurveyResponse): void {
-    alert(`Editar encuesta: ${survey.title} (ID: ${survey._id})`);
-    // Aquí navegarías a la página de edición de encuestas, pasando el ID
+    
     this.router.navigate(['/admin/survey-editor/', survey._id]);
     this.closeAllActionMenus();
   }

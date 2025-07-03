@@ -30,7 +30,10 @@ export class SurveyViewer implements OnInit {
   surveyId: string | null = null;
   surveyTitle: string = 'Cargando Encuesta...';
   surveyQuestions: SurveyQuestion[] = [];
-  userAnswers: { [questionId: string]: any } = {}; // Objeto para almacenar las respuestas del usuario
+  userAnswers: { [questionId: string]: any } = {};
+  
+  surveySubmitted: boolean = false; 
+  submissionError: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,7 +60,6 @@ export class SurveyViewer implements OnInit {
 
 
   loadSurvey(id: string): void {
-    console.log(`Cargando datos para la encuesta ID: ${id}`);
     this.surveyService.getSurveysById(id).subscribe({
       next: (data) => {
         this.surveyTitle = data.title;
@@ -106,13 +108,9 @@ export class SurveyViewer implements OnInit {
     return isValid;
   }
 
-  // Envía las respuestas del usuario
+  
   onSubmit(): void {
     if (this.validateForm()) {
-      console.log('Encuesta Enviada:', {
-        surveyId: this.surveyId,
-        answers: this.userAnswers
-      });
 
       this.surveyResponsesService.createResponse({
         surveyId: this.surveyId || '',
@@ -123,22 +121,25 @@ export class SurveyViewer implements OnInit {
         }))
       }).subscribe({
         next: (response) => {
-          console.log('Respuesta enviada con éxito:', response);
+          this.surveySubmitted = true; 
+            this.userAnswers = {}; 
         },
         error: (error) => {
           console.error('Error al enviar la respuesta:', error);
           alert('Hubo un error al enviar su respuesta. Por favor, inténtelo de nuevo más tarde.');
         }
       });
-      alert('¡Encuesta enviada con éxito! Gracias por su participación.');
-      // En una aplicación real, enviarías `this.userAnswers` a tu backend.
-      // Luego podrías redirigir al usuario o mostrar un mensaje de agradecimiento.
-      // this.router.navigate(['/thank-you']);
+
     } else {
       alert('Por favor, complete todas las preguntas requeridas antes de enviar.');
     }
   }
 
+  restart(){
+    this.surveySubmitted = false; // Reinicia el estado de envío
+    this.userAnswers = {}; // Limpia las respuestas del usuario
+    this.loadSurvey(this.surveyId || ''); // Recarga la encuesta para reiniciar
+  }
   // Función auxiliar para generar un array para ngFor en el rating
   getStars(count: number): number[] {
     return Array(count).fill(0).map((x, i) => i + 1);

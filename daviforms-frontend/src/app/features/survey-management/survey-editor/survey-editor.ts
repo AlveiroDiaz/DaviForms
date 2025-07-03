@@ -42,14 +42,11 @@ export class SurveyEditor implements OnInit {
 
   // Simula la carga de una encuesta existente para edición
   loadSurveyForEditing(id: string): void {
-    console.log(`Cargando encuesta con ID: ${id} para edición...`);
-    // En una aplicación real, harías una solicitud HTTP a tu backend aquí
     this.surveyService.getSurveysById(id).subscribe({
       next: (survey) => {
         this.surveyTitle = survey.title;
         this.surveyQuestions = survey.questions;
         this.nextQuestionId = this.surveyQuestions.length + 1; // Ajusta el contador para nuevas preguntas
-        console.log('Encuesta cargada:', survey);
       },
       error: (err) => {
         console.error('Error al cargar la encuesta:', err);
@@ -99,7 +96,6 @@ export class SurveyEditor implements OnInit {
         return;
     }
     this.surveyQuestions.push(newQuestion);
-    console.log(`Pregunta "${newQuestion.label}" (${newQuestion.type}) añadida.`);
   }
 
   // Inicia el modo de edición para una pregunta específica
@@ -121,13 +117,11 @@ export class SurveyEditor implements OnInit {
   cancelEditing(): void {
     this.editingQuestionId = null;
     this.currentQuestionBeingEdited = null;
-    console.log('Edición cancelada.');
   }
 
   deleteQuestion(questionId: string): void {
     if (confirm('¿Estás seguro de que quieres eliminar esta pregunta?')) {
       this.surveyQuestions = this.surveyQuestions.filter(q => q.id !== questionId);
-      console.log(`Pregunta ${questionId} eliminada.`);
 
       if (this.editingQuestionId === questionId) {
         this.cancelEditing();
@@ -176,14 +170,4 @@ saveSurvey(): void {
     }
   }
 
-
-  publishSurvey(): void {
-    console.log('Publicando encuesta:', {
-      id: this.surveyId,
-      title: this.surveyTitle,
-      questions: this.surveyQuestions
-    });
-    alert('Encuesta publicada (simulado).');
-    // Aquí es donde harías una llamada a tu servicio para cambiar el estado a "publicado"
-  }
 }

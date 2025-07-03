@@ -1,85 +1,96 @@
 <div class="survey-viewer-container">
-  <div class="survey-header">
-    <h1>{{ surveyTitle }}</h1>
-    <p *ngIf="surveyQuestions.length > 0">Por favor, complete las siguientes preguntas:</p>
-  </div>
-
-  <form (ngSubmit)="onSubmit()" class="survey-form">
-    <div *ngIf="surveyQuestions.length === 0" class="no-questions-message">
-      <p>No se encontraron preguntas para esta encuesta, o el ID es inválido.</p>
-      <!-- <button class="btn primary" (click)="router.navigate(['/'])">Volver al Inicio</button> -->
+  <ng-container *ngIf="!surveySubmitted">
+    <div class="survey-header">
+      <h1>{{ surveyTitle }}</h1>
+      <p *ngIf="surveyQuestions.length > 0">Por favor, complete las siguientes preguntas:</p>
     </div>
 
-    <div *ngFor="let question of surveyQuestions" class="question-block">
-      <div class="question-label">
-        <label [for]="'q-' + question.id">{{ question.label }}</label>
-        <span *ngIf="question.required" class="required-indicator">*</span>
+    <form (ngSubmit)="onSubmit()" class="survey-form">
+      <div *ngIf="submissionError" class="alert alert-danger">
+        {{ submissionError }}
       </div>
 
-      <ng-container [ngSwitch]="question.type">
-        <input *ngSwitchCase="'short-text'"
-               type="text"
-               [id]="'q-' + question.id"
-               [(ngModel)]="userAnswers[question.id]"
-               [name]="'q-' + question.id"
-               [placeholder]="question.placeholder || 'Escriba su respuesta aquí...'"
-               [required]="question.required">
+      <div *ngIf="surveyQuestions.length === 0 && surveyTitle !== 'Cargando encuesta...'" class="no-questions-message">
+        <p>{{ surveyTitle }}</p> </div>
 
-        <textarea *ngSwitchCase="'long-text'"
-                  [id]="'q-' + question.id"
-                  [(ngModel)]="userAnswers[question.id]"
-                  [name]="'q-' + question.id"
-                  [placeholder]="question.placeholder || 'Escriba su respuesta detallada aquí...'"
-                  [required]="question.required"></textarea>
+      <div *ngFor="let question of surveyQuestions" class="question-block">
+        <div class="question-label">
+          <label [for]="'q-' + question.id">{{ question.label }}</label>
+          <span *ngIf="question.required" class="required-indicator">*</span>
+        </div>
 
-        <div *ngSwitchCase="'multiple-choice'" class="options-group">
-          <div *ngFor="let option of question.options" class="option-item">
-            <input type="checkbox"
-                   [id]="'q-' + question.id + '-opt-' + option.id"
-                   [value]="option.value"
-                   (change)="onCheckboxChange(question.id, option.value, $event)"
-                   [name]="'q-' + question.id + '-checkbox'"
-                   [checked]="userAnswers[question.id]?.includes(option.value)">
-            <label [for]="'q-' + question.id + '-opt-' + option.id">{{ option.value }}</label>
+        <ng-container [ngSwitch]="question.type">
+          <input *ngSwitchCase="'short-text'"
+                 type="text"
+                 [id]="'q-' + question.id"
+                 [(ngModel)]="userAnswers[question.id]"
+                 [name]="'q-' + question.id"
+                 [placeholder]="question.placeholder || 'Escriba su respuesta aquí...'"
+                 [required]="question.required">
+
+          <textarea *ngSwitchCase="'long-text'"
+                    [id]="'q-' + question.id"
+                    [(ngModel)]="userAnswers[question.id]"
+                    [name]="'q-' + question.id"
+                    [placeholder]="question.placeholder || 'Escriba su respuesta detallada aquí...'"
+                    [required]="question.required"></textarea>
+
+          <div *ngSwitchCase="'multiple-choice'" class="options-group">
+            <div *ngFor="let option of question.options" class="option-item">
+              <input type="checkbox"
+                     [id]="'q-' + question.id + '-opt-' + option.id"
+                     [value]="option.value"
+                     (change)="onCheckboxChange(question.id, option.value, $event)"
+                     [name]="'q-' + question.id + '-checkbox'"
+                     [checked]="userAnswers[question.id]?.includes(option.value)">
+              <label [for]="'q-' + question.id + '-opt-' + option.id">{{ option.value }}</label>
+            </div>
           </div>
-        </div>
 
-        <div *ngSwitchCase="'single-choice'" class="options-group">
-          <div *ngFor="let option of question.options" class="option-item">
-            <input type="radio"
-                   [id]="'q-' + question.id + '-opt-' + option.id"
-                   [value]="option.value"
-                   [(ngModel)]="userAnswers[question.id]"
-                   [name]="'q-' + question.id"
-                   [required]="question.required">
-            <label [for]="'q-' + question.id + '-opt-' + option.id">{{ option.value }}</label>
+          <div *ngSwitchCase="'single-choice'" class="options-group">
+            <div *ngFor="let option of question.options" class="option-item">
+              <input type="radio"
+                     [id]="'q-' + question.id + '-opt-' + option.id"
+                     [value]="option.value"
+                     [(ngModel)]="userAnswers[question.id]"
+                     [name]="'q-' + question.id"
+                     [required]="question.required">
+              <label [for]="'q-' + question.id + '-opt-' + option.id">{{ option.value }}</label>
+            </div>
           </div>
-        </div>
 
-        <div *ngSwitchCase="'rating'" class="rating-group">
-          <span *ngFor="let star of getStars(question.ratingMax || 5)" class="rating-star"
-                (click)="userAnswers[question.id] = star"
-                [class.selected]="userAnswers[question.id] >= star">
-            <i class="fas fa-star"></i>
-          </span>
-          <span class="rating-value">{{ userAnswers[question.id] || 'N/A' }}</span>
-          <input type="hidden" [(ngModel)]="userAnswers[question.id]" [name]="'q-' + question.id" [required]="question.required">
-        </div>
+          <div *ngSwitchCase="'rating'" class="rating-group">
+            <span *ngFor="let star of getStars(question.ratingMax || 5)" class="rating-star"
+                  (click)="userAnswers[question.id] = star"
+                  [class.selected]="userAnswers[question.id] >= star">
+              <i class="fas fa-star"></i> </span>
+            <span class="rating-value">{{ userAnswers[question.id] || 'N/A' }}</span>
+            <input type="hidden" [(ngModel)]="userAnswers[question.id]" [name]="'q-' + question.id" [required]="question.required">
+          </div>
 
-        <input *ngSwitchCase="'date'"
-               type="date"
-               [id]="'q-' + question.id"
-               [(ngModel)]="userAnswers[question.id]"
-               [name]="'q-' + question.id"
-               [required]="question.required">
+          <input *ngSwitchCase="'date'"
+                 type="date"
+                 [id]="'q-' + question.id"
+                 [(ngModel)]="userAnswers[question.id]"
+                 [name]="'q-' + question.id"
+                 [required]="question.required">
 
-      </ng-container>
+        </ng-container>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary submit-btn">
+          <i class="fas fa-paper-plane"></i> Enviar Encuesta
+        </button>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-container *ngIf="surveySubmitted">
+    <div class="thank-you-message">
+      <i class="fas fa-check-circle success-icon"></i> <h2>¡Gracias por tu participación!</h2>
+      <p>Tu opinión es muy valiosa para nosotros y nos ayuda a mejorar.</p>
+      <button class="btn primary" (click)="restart()">Responder de nuevo</button>
     </div>
-
-    <div class="form-actions">
-      <button type="submit" class="btn primary submit-btn">
-        <i class="fas fa-paper-plane"></i> Enviar Encuesta
-      </button>
-    </div>
-  </form>
+  </ng-container>
 </div>
