@@ -41,8 +41,12 @@ git clone https://github.com/AlveiroDiaz/DaviForms.git
 # Instalar dependencias
 npm install
 
-# Servidor de desarrollo
-ng serve
+# Servidor de desarrollo frontend 
+ng serve --open
+
+# Servidor de desarrollo backend
+
+npm run start:dev
 
 # Build para producción
 ng build --configuration production
