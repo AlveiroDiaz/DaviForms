@@ -1,0 +1,42 @@
+<div class="admin-dashboard-container">
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <h1 class="logo">DaviForms Admin</h1>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a routerLink="/admin/manage-surveys" routerLinkActive="active">
+            <i class="fas fa-list-alt"></i> Gestionar Encuestas
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/survey-editor" routerLinkActive="active">
+            <i class="fas fa-plus-circle"></i> Crear Encuesta
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/analyze-results" routerLinkActive="active">
+            <i class="fas fa-chart-pie"></i> Analizar Resultados
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/manage-users" routerLinkActive="active">
+            <i class="fas fa-users-cog"></i> Gestionar Usuarios
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#">Cerrar Sesión</a>
+    </div>
+  </aside>
+
+  <main class="admin-content">
+    <header class="content-header">
+      <h2>Bienvenido al Panel de Administración</h2>
+      </header>
+    <div class="content-area">
+      <router-outlet></router-outlet> </div>
+  </main>
+</div>

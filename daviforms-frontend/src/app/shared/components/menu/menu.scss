@@ -1,0 +1,176 @@
+// Definición de variables de color (puedes copiarlas de auth.component.scss para consistencia)
+$primary-red: #E4002B; // Rojo principal, similar al de Davivienda
+$secondary-red: #FF4D4D; // Un rojo más claro o brillante (podrías usarlo si quieres acentos más vivos)
+$light-red-bg: #FFEBEE; // Fondo muy claro para el panel (como el derecho en el login)
+$dark-gray: #333;
+$medium-gray: #666;
+$light-gray: #ddd;
+$lighter-gray-bg: #f0f2f5;
+
+// Nuevo color para un fondo de sidebar más rojizo y oscuro
+$sidebar-dark-redish: #4F0015; // Un rojo muy oscuro, casi borgoña/marrón oscuro
+
+.admin-dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: $lighter-gray-bg; // Fondo general del dashboard
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: $sidebar-dark-redish; // <-- Fondo rojo oscuro para el sidebar
+  color: white; // El texto general del sidebar será blanco
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.2); // Sombra para dar profundidad
+
+  .sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: white; // Logo en blanco para contraste
+    }
+  }
+
+  .sidebar-nav {
+    flex-grow: 1;
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 10px;
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        color: rgba(255, 255, 255, 0.7); // Texto de enlace ligeramente transparente para inactivos
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+
+        .fas {
+          margin-right: 10px;
+          font-size: 18px;
+        }
+
+        &:hover {
+          // Fondo al pasar el ratón, un tono de rojo más sutil
+          background-color: rgba($primary-red, 0.3); // Rojo primario con 30% de opacidad
+          color: white;
+        }
+
+        &.active {
+          // Fondo rojo principal para el elemento activo
+          background-color: $primary-red;
+          color: white;
+          font-weight: bold;
+          .fas {
+            color: white; // Asegura que el icono también sea blanco
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding-top: 20px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1); // Línea divisoria sutil
+    a {
+      color: rgba(255, 255, 255, 0.5); // Texto del footer más sutil
+      text-decoration: none;
+      font-size: 14px;
+      &:hover {
+        color: white;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Contenido principal (derecho)
+.admin-content {
+  flex-grow: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  .content-header {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    h2 {
+      margin: 0;
+      color: $dark-gray;
+      font-size: 24px;
+    }
+  }
+
+  .content-area {
+    flex-grow: 1;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    // Aquí es donde se renderizarán los componentes hijos de las rutas
+  }
+}
+
+/* Media Queries para responsividad (mantenerlos) */
+@media (max-width: 992px) {
+  .admin-sidebar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard-container {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row; // Los elementos del sidebar se alinean horizontalmente
+    justify-content: space-around;
+    padding: 15px;
+    .sidebar-header {
+      display: none; // Oculta el logo en móviles si no hay espacio
+    }
+    .sidebar-nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .sidebar-footer {
+      display: none; // Oculta el footer en móviles
+    }
+    a {
+      padding: 8px 12px;
+    }
+  }
+
+  .admin-content {
+    padding: 20px;
+    .content-header {
+      padding: 15px 20px;
+    }
+    .content-area {
+      padding: 20px;
+    }
+  }
+}

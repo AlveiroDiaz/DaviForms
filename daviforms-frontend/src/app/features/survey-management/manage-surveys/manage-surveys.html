@@ -1,0 +1,54 @@
+<div class="manage-surveys-container">
+  <div class="header-section">
+    <h2>Gestionar Encuestas</h2>
+    <button class="btn primary add-survey-btn" (click)="goToCreateSurvey()">
+      <i class="fas fa-plus-circle"></i> Agregar Nueva Encuesta
+    </button>
+  </div>
+
+  <div class="surveys-table-wrapper">
+    <table class="surveys-table">
+      <thead>
+        <tr>
+          <th>Título de la Encuesta</th>
+          <th>Estado</th>
+          <th>Respuestas</th>
+          <th>Fecha de Creación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let survey of surveys">
+          <td>{{ survey.title }}</td>
+          <td>
+            <span class="status-badge" [class.active]="survey.status === 'Activa'" [class.inactive]="survey.status === 'Inactiva'">
+              {{ survey.status }}
+            </span>
+          </td>
+          <td>{{ survey.responses }}</td>
+          <td>{{ survey.creationDate | date:'dd/MM/yyyy' }}</td>
+          <td class="actions-cell">
+            <div class="action-menu">
+              <button class="btn icon-btn" (click)="toggleActionsMenu(survey)">
+                <i class="fas fa-ellipsis-v"></i> </button>
+              <div class="dropdown-menu" [class.show]="survey.showActionsMenu">
+                <a class="dropdown-item" (click)="editSurvey(survey)">
+                  <i class="fas fa-edit"></i> Editar
+                </a>
+                <a class="dropdown-item" (click)="copySurveyLink(survey)">
+                  <i class="fas fa-link"></i> Copiar Enlace
+                </a>
+                <a class="dropdown-item delete-item" (click)="deleteSurvey(survey)">
+                  <i class="fas fa-trash-alt"></i> Eliminar
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="surveys.length === 0">
+          <td colspan="5" class="no-data">No hay encuestas para mostrar. Crea una nueva.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

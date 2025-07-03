@@ -1,0 +1,182 @@
+// Primero, importa las funciones de color de Sass
+@use "sass:color"; // <-- ¡Añade esta línea!
+
+// Definición de variables de color (ASEGÚRATE DE QUE ESTÁN AQUÍ)
+$primary-red: #E4002B;
+$dark-gray: #333;
+$medium-gray: #666;
+$light-gray: #ddd;
+$lighter-gray-bg: #f0f2f5;
+$light-red-bg: #FFEBEE; // <-- ¡Asegúrate de que esta variable esté definida!
+
+.manage-surveys-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  min-height: calc(100vh - 120px);
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $light-gray;
+
+  h2 {
+    margin: 0;
+    color: $dark-gray;
+    font-size: 28px;
+  }
+
+  .add-survey-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: $primary-red;
+    color: white;
+
+    .fas {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      // CORRECCIÓN: Usar color.adjust para oscurecer
+      background-color: color.adjust($primary-red, $lightness: -10%);
+    }
+  }
+}
+
+.surveys-table-wrapper {
+  overflow-x: auto;
+}
+
+.surveys-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 15px;
+
+  thead {
+    background-color: $lighter-gray-bg;
+    th {
+      padding: 15px;
+      text-align: left;
+      color: $medium-gray;
+      font-weight: bold;
+      border-bottom: 2px solid $light-gray;
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background-color: #fdfdfd;
+      }
+      &:hover {
+        background-color: $light-red-bg; // <-- Esta es la línea que fallaba
+      }
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid $light-gray;
+      color: $dark-gray;
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 30px;
+    color: $medium-gray;
+    font-style: italic;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+
+    &.active {
+      background-color: #28a745;
+    }
+    &.inactive {
+      background-color: #ffc107;
+      color: $dark-gray;
+    }
+  }
+
+  .actions-cell {
+    position: relative;
+    text-align: center;
+
+    .icon-btn {
+      background: none;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      color: $medium-gray;
+      &:hover {
+        color: $primary-red;
+      }
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: white;
+      border: 1px solid $light-gray;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 10;
+      min-width: 150px;
+      display: none;
+
+      &.show {
+        display: block;
+      }
+
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        color: $dark-gray;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        .fas {
+          margin-right: 10px;
+        }
+
+        &:hover {
+          background-color: $light-red-bg;
+          color: $primary-red;
+        }
+
+        &.delete-item {
+          color: #dc3545;
+          &:hover {
+            background-color: #f8d7da;
+            color: #dc3545;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Media Queries para responsividad (mantenerlos)
+@media (max-width: 768px) {
+  // ... tus media queries
+}

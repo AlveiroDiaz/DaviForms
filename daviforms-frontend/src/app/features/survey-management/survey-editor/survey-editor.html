@@ -1,0 +1,140 @@
+<div class="survey-editor-container">
+  <aside class="left-panel">
+    <div class="panel-header">
+      <h2>Herramientas de Encuesta</h2>
+      <input type="text" [(ngModel)]="surveyTitle" placeholder="Ingresa el Título de la Encuesta" class="survey-title-input">
+      <div class="save-publish-buttons">
+        <button class="btn primary" (click)="saveSurvey()">
+          <i class="fas fa-save"></i> Guardar
+        </button>
+        <button class="btn secondary" (click)="publishSurvey()">
+          <i class="fas fa-paper-plane"></i> Publicar
+        </button>
+      </div>
+    </div>
+
+    <div class="question-types">
+      <h3>Tipos de Pregunta</h3>
+      <p class="instruction-text">Haz clic para añadir una pregunta:</p>
+      <button class="btn type-btn" (click)="addQuestion('short-text')">
+        <i class="fas fa-text-width"></i> Texto Corto
+      </button>
+      <button class="btn type-btn" (click)="addQuestion('long-text')">
+        <i class="fas fa-align-left"></i> Párrafo
+      </button>
+      <button class="btn type-btn" (click)="addQuestion('multiple-choice')">
+        <i class="fas fa-check-square"></i> Opción Múltiple (Checkbox)
+      </button>
+      <button class="btn type-btn" (click)="addQuestion('single-choice')">
+        <i class="fas fa-dot-circle"></i> Selección Única (Radio)
+      </button>
+      <button class="btn type-btn" (click)="addQuestion('rating')">
+        <i class="fas fa-star"></i> Valoración (Estrellas)
+      </button>
+      <button class="btn type-btn" (click)="addQuestion('date')">
+        <i class="fas fa-calendar-alt"></i> Fecha
+      </button>
+      </div>
+  </aside>
+
+  <main class="right-panel">
+    <div class="panel-header">
+      <h2>Previsualización de la Encuesta</h2>
+      <p class="survey-preview-title">{{ surveyTitle }}</p>
+    </div>
+
+    <div class="survey-preview-area">
+      <div class="question-list">
+        <div *ngIf="surveyQuestions.length === 0" class="no-questions-placeholder">
+          <i class="fas fa-lightbulb"></i>
+          Añade preguntas desde el panel de la izquierda para comenzar a construir tu encuesta.
+        </div>
+
+        <div *ngFor="let question of surveyQuestions" class="question-card">
+          <div class="question-header">
+            <h3>{{ question.label }} <span *ngIf="question.required" class="required-badge">*</span></h3>
+            <div class="question-actions">
+              <button class="btn action-icon-btn" (click)="editQuestion(question)">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button class="btn action-icon-btn delete-btn" (click)="deleteQuestion(question.id)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="editingQuestionId === question.id && currentQuestionBeingEdited" class="question-editor">
+            <h4>Editar Pregunta</h4>
+            <div class="form-group">
+              <label [for]="'edit-label-' + question.id">Texto de la pregunta:</label>
+              <input [id]="'edit-label-' + question.id" type="text" [(ngModel)]="currentQuestionBeingEdited.label" class="editor-input">
+            </div>
+            <div class="form-group checkbox-group">
+              <input type="checkbox" [id]="'edit-required-' + question.id" [(ngModel)]="currentQuestionBeingEdited.required">
+              <label [for]="'edit-required-' + question.id">Campo Requerido</label>
+            </div>
+
+            <ng-container *ngIf="currentQuestionBeingEdited.type === 'multiple-choice' || currentQuestionBeingEdited.type === 'single-choice'">
+              <div class="options-editor">
+                <h5>Opciones:</h5>
+                <div *ngFor="let option of currentQuestionBeingEdited.options; let i = index" class="option-item">
+                  <input type="text" [(ngModel)]="option.value" [placeholder]="'Opción ' + (i + 1)" class="editor-input">
+                  <button class="btn remove-option-btn" (click)="removeOption(currentQuestionBeingEdited, option.id)">
+                    <i class="fas fa-minus-circle"></i>
+                  </button>
+                </div>
+                <button class="btn add-option-btn" (click)="addOption(currentQuestionBeingEdited)">
+                  <i class="fas fa-plus-circle"></i> Añadir Opción
+                </button>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="currentQuestionBeingEdited.type === 'rating'">
+              <div class="form-group">
+                <label [for]="'rating-max-' + question.id">Valoración Máxima (Estrellas):</label>
+                <input [id]="'rating-max-' + question.id" type="number" [(ngModel)]="currentQuestionBeingEdited.ratingMax" min="1" max="10" class="editor-input">
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="currentQuestionBeingEdited.type === 'short-text' || currentQuestionBeingEdited.type === 'long-text'">
+              <div class="form-group">
+                <label [for]="'placeholder-' + question.id">Texto de Ejemplo (Placeholder):</label>
+                <input [id]="'placeholder-' + question.id" type="text" [(ngModel)]="currentQuestionBeingEdited.placeholder" placeholder="Ej: Escribe tu respuesta aquí..." class="editor-input">
+              </div>
+            </ng-container>
+
+            <div class="editor-actions">
+              <button class="btn primary" (click)="saveEditedQuestion()">Guardar Cambios</button>
+              <button class="btn secondary" (click)="cancelEditing()">Cancelar</button>
+            </div>
+          </div>
+
+          <div class="question-preview">
+            <label>{{ question.label }} <span *ngIf="question.required" class="required-text">(Requerido)</span></label>
+
+            <ng-container [ngSwitch]="question.type">
+              <input *ngSwitchCase="'short-text'" type="text" [placeholder]="question.placeholder || ''" class="preview-input">
+              <textarea *ngSwitchCase="'long-text'" [placeholder]="question.placeholder || ''" class="preview-textarea"></textarea>
+              <div *ngSwitchCase="'multiple-choice'" class="preview-options">
+                <div *ngFor="let option of question.options" class="checkbox-option">
+                  <input type="checkbox" [id]="option.id + '-prev'">
+                  <label [for]="option.id + '-prev'">{{ option.value }}</label>
+                </div>
+              </div>
+              <div *ngSwitchCase="'single-choice'" class="preview-options">
+                <div *ngFor="let option of question.options" class="radio-option">
+                  <input type="radio" [name]="question.id + '-radio'" [id]="option.id + '-prev'">
+                  <label [for]="option.id + '-prev'">{{ option.value }}</label>
+                </div>
+              </div>
+              <div *ngSwitchCase="'rating'" class="preview-rating">
+                <i *ngFor="let i of [].constructor(question.ratingMax || 5); let idx = index" class="fas fa-star preview-star"></i>
+              </div>
+              <input *ngSwitchCase="'date'" type="date" class="preview-input">
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

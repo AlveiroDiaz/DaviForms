@@ -1,0 +1,229 @@
+/* Importar Font Awesome (si lo vas a usar, descomenta la línea) */
+/* @import '~@fortawesome/fontawesome-free/css/all.min.css'; */
+
+// Definición de variables de color para fácil modificación
+$primary-red: #E4002B; // Rojo principal, similar al de Davivienda
+$secondary-red: #FF4D4D; // Un rojo más claro o brillante
+$light-red-bg: #FFEBEE; // Fondo muy claro para el panel derecho
+$dark-gray: #333;
+$medium-gray: #666;
+$light-gray: #ddd;
+$lighter-gray-bg: #f0f2f5;
+
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: $lighter-gray-bg; // Fondo general gris claro
+}
+
+.auth-left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  background-color: #fff; // Fondo blanco para el panel izquierdo
+  max-width: 60%;
+  min-width: 400px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: flex-start;
+
+  .auth-header {
+    margin-bottom: 50px;
+    .logo {
+      font-size: 28px;
+      color: $dark-gray;
+      font-weight: bold;
+    }
+  }
+
+  .auth-content {
+    width: 100%;
+    max-width: 400px;
+    margin-top: -50px;
+  }
+
+  .title {
+    font-size: 32px;
+    color: $dark-gray;
+    margin-bottom: 15px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: $medium-gray;
+    margin-bottom: 30px;
+  }
+}
+
+.login-form {
+  .form-group {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: $medium-gray;
+
+      .icon-label {
+        display: flex;
+        align-items: center;
+        .fas {
+          margin-right: 8px;
+          color: $medium-gray; // Ícono de sobre en gris
+        }
+      }
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid $light-gray;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+  }
+
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      input[type="checkbox"] {
+        margin-right: 8px;
+      }
+    }
+
+    .forgot-password {
+      color: $primary-red; // Enlace en rojo principal
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &.primary {
+        background-color: $primary-red; // Botón principal en rojo
+        color: white;
+        &:hover {
+          background-color: darken($primary-red, 10%); // Rojo un poco más oscuro al pasar el ratón
+        }
+      }
+
+      &.secondary {
+        background-color: $light-gray; // Botón secundario en gris claro
+        color: $dark-gray;
+        &:hover {
+          background-color: darken($light-gray, 10%);
+        }
+      }
+    }
+  }
+}
+
+.social-login {
+  text-align: center;
+  p {
+    color: $medium-gray;
+    margin-bottom: 15px;
+  }
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    .social-link {
+      color: $primary-red; // Enlaces sociales en rojo
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.auth-right-panel {
+  flex: 1.5;
+  background-color: $light-red-bg; // Fondo del panel derecho en rojo muy claro
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px;
+  box-sizing: border-box;
+
+  .auth-nav {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 30px;
+
+      li a {
+        text-decoration: none;
+        color: $medium-gray; // Color de texto normal para navegación
+        font-weight: bold;
+        &:hover {
+          color: $primary-red; // Rojo al pasar el ratón
+        }
+      }
+    }
+  }
+
+  .illustration {
+    text-align: center;
+    padding-top: 50px;
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .auth-left-panel,
+  .auth-right-panel {
+    max-width: 100%;
+    min-width: unset;
+    padding: 20px;
+  }
+
+  .auth-right-panel {
+    .auth-nav ul {
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+  }
+}

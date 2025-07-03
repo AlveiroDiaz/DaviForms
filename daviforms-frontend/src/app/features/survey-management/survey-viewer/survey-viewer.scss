@@ -1,0 +1,230 @@
+@use "sass:color";
+
+// Variables de color (consistentes con el resto de tu aplicación)
+$primary-red: #E4002B;
+$dark-gray: #333;
+$medium-gray: #666;
+$light-gray: #ddd;
+$lighter-gray-bg: #f0f2f5;
+$form-bg-color: #ffffff;
+$required-color: #dc3545; // Rojo para indicadores de requerido
+$star-color: #ffc107; // Amarillo para estrellas
+
+.survey-viewer-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: $form-bg-color;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  color: $dark-gray;
+}
+
+.survey-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid $light-gray;
+  padding-bottom: 20px;
+
+  h1 {
+    font-size: 32px;
+    color: $primary-red;
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: 18px;
+    color: $medium-gray;
+  }
+}
+
+.survey-form {
+  .no-questions-message {
+    text-align: center;
+    padding: 50px 20px;
+    color: $medium-gray;
+    font-style: italic;
+    font-size: 18px;
+    p { margin-bottom: 20px; }
+    .btn { margin-top: 20px; }
+  }
+
+  .question-block {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed $light-gray;
+
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .question-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+
+      label {
+        font-weight: bold;
+        font-size: 18px;
+        color: $dark-gray;
+        margin-right: 5px;
+      }
+      .required-indicator {
+        color: $required-color;
+        font-size: 1.1em;
+        font-weight: bold;
+      }
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea {
+      width: calc(100% - 24px); /* Ajuste para padding */
+      padding: 12px;
+      border: 1px solid $light-gray;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-red;
+        box-shadow: 0 0 0 3px rgba($primary-red, 0.2);
+      }
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .options-group {
+      .option-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        cursor: pointer;
+
+        input[type="checkbox"],
+        input[type="radio"] {
+          margin-right: 12px;
+          min-width: 18px; /* Asegura un tamaño clicable */
+          min-height: 18px;
+          accent-color: $primary-red; /* Color para los checkboxes/radios nativos */
+          cursor: pointer;
+        }
+
+        label {
+          font-size: 16px;
+          color: $medium-gray;
+          cursor: pointer;
+          flex-grow: 1; /* Ocupa el espacio restante */
+        }
+      }
+    }
+
+    .rating-group {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+
+      .rating-star {
+        font-size: 28px;
+        color: $light-gray; /* Color de estrella por defecto */
+        margin-right: 5px;
+        cursor: pointer;
+        transition: color 0.2s ease, transform 0.1s ease;
+
+        &:hover {
+          color: lighten($star-color, 10%);
+          transform: scale(1.1);
+        }
+
+        &.selected {
+          color: $star-color; /* Estrella seleccionada */
+        }
+      }
+      .rating-value {
+        margin-left: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        color: $primary-red;
+      }
+    }
+  }
+
+  .form-actions {
+    margin-top: 30px;
+    text-align: center;
+
+    .submit-btn {
+      background-color: $primary-red;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      .fas {
+        margin-right: 10px;
+      }
+
+      &:hover {
+        background-color: color.adjust($primary-red, $lightness: -10%);
+        transform: translateY(-2px);
+      }
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .survey-viewer-container {
+    margin: 20px auto;
+    padding: 20px;
+  }
+  .survey-header h1 {
+    font-size: 28px;
+  }
+  .question-block .question-label label {
+    font-size: 16px;
+  }
+  .question-block input, .question-block textarea, .question-block select {
+    font-size: 15px;
+  }
+  .question-block .options-group .option-item label {
+    font-size: 15px;
+  }
+  .question-block .rating-group .rating-star {
+    font-size: 24px;
+  }
+  .form-actions .submit-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .survey-viewer-container {
+    padding: 15px;
+  }
+  .survey-header h1 {
+    font-size: 24px;
+  }
+  .form-actions .submit-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}
